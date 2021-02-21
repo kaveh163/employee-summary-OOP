@@ -10,7 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-
 class EmployeeInfo {
   constructor() {
     this.employees = [];
@@ -222,16 +221,33 @@ class EmployeeInfo {
   }
   quit() {
     console.log(this.employees);
-    process.exit();
-    
+    const HTML = render(this.getEmployees());
+    //send to File team.html
+    try {
+      if (fs.existsSync(OUTPUT_DIR)) {
+        console.log("Directory exists.");
+        fs.writeFileSync(outputPath, HTML);
+        // fs.appendFile(outputPath, "Hello", (err) => {
+        //   if (err) throw err;
+        // });
+      } else {
+        console.log("Directory does not exist. created the output directory");
+        fs.mkdirSync(OUTPUT_DIR);
+        fs.writeFileSync(outputPath, HTML);
+        // fs.appendFile(outputPath, "Hello", (err) => {
+        //   if (err) throw err;
+        // });
+      }
+    } catch (e) {
+      console.log("An error occurred.");
+    }
+
+    process.exit(0);
   }
 }
 
-
 const employeeInfo = new EmployeeInfo();
 employeeInfo.employee();
-
-
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
