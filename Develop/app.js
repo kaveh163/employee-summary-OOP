@@ -10,6 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let employees = [];
 class EmployeeInfo {
   constructor() {
     this.employees = [];
@@ -25,20 +26,25 @@ class EmployeeInfo {
   }
   manageEmployees() {
     this.askManagerInfo().then(() => {
-      this.employeeMembers().then(() => {
-        this.addTeamMember().then(() => {
-          if (this.memberAdd) {
-            this.employeeMembers();
-          } else if (!this.memberAdd) {
-            this.addManager();
-            if (this.managerAdd) {
-              this.employee();
-            } else {
-              this.quit();
-            }
-          }
-        });
-      });
+      this.employeeMembers();
+      //   this.employeeMembers().then(() => {
+      // this.addTeamMember().then(() => {
+      //   if (this.memberAdd) {
+      //     console.log("Here", this.employeeMembers());
+
+      //     this.employeeMembers().then(() => {
+      //       console.log("Member added");
+      //     });
+      //   } else if (!this.memberAdd) {
+      //     this.addManager();
+      //     if (this.managerAdd) {
+      //       this.employee();
+      //     } else {
+      //       this.quit();
+      //     }
+      //   }
+      // });
+      //   });
     });
   }
   askManagerInfo() {
@@ -76,11 +82,39 @@ class EmployeeInfo {
       });
   }
   employeeMembers() {
-    return this.askMemberType().then(() => {
+    this.askMemberType().then(() => {
       if (this.teamMemberType === "Engineer") {
-        this.askEngineer();
+        this.askEngineer().then(() => {
+          this.addTeamMember().then(() => {
+            if (this.memberAdd) {
+              this.employeeMembers();
+            } else if (!this.memberAdd) {
+              this.addManager().then(() => {
+                if (this.managerAdd) {
+                  this.employee();
+                } else if (!this.managerAdd) {
+                  this.quit();
+                }
+              });
+            }
+          });
+        });
       } else if (this.teamMemberType === "Intern") {
-        this.askIntern();
+        this.askIntern().then(() => {
+          this.addTeamMember().then(() => {
+            if (this.memberAdd) {
+              this.employeeMembers();
+            } else if (!this.memberAdd) {
+              this.addManager().then(() => {
+                if (this.managerAdd) {
+                  this.employee();
+                } else if (!this.managerAdd) {
+                  this.quit();
+                }
+              });
+            }
+          });
+        });
       }
     });
   }
@@ -120,7 +154,7 @@ class EmployeeInfo {
       });
   }
   askEngineer() {
-    inquirer
+    return inquirer
       .prompt([
         {
           name: "engineerName",
@@ -154,7 +188,7 @@ class EmployeeInfo {
       });
   }
   askIntern() {
-    inquirer
+    return inquirer
       .prompt([
         {
           name: "internName",
@@ -188,7 +222,7 @@ class EmployeeInfo {
       });
   }
   addManager() {
-    inquirer
+    return inquirer
       .prompt([
         {
           name: "manager",
@@ -205,13 +239,21 @@ class EmployeeInfo {
       });
   }
   quit() {
-    process.exit(0);
+    employees =  this.getEmployees();
+    process.exit();
+    // this.getEmployees();
   }
 }
 const employeeInfo = new EmployeeInfo();
 employeeInfo.employee();
-const employees = employeeInfo.getEmployees();
 console.log(employees);
+// console.log(employeeInfo.employee());
+// console.log(employees);
+// let employees = employeeInfo.getEmployees();
+// if (employees != []) {
+//   console.log(employees);
+// }
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
