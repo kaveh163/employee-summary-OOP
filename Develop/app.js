@@ -14,13 +14,33 @@ class EmployeeInfo {
   constructor() {
     this.employees = [];
   }
+  getEmployees() {
+    return this.employees;
+  }
   employee() {
     this.teamMemberType = "";
     this.managerAdd = false;
     this.memberAdd = false;
     this.manageEmployees();
   }
-  manageEmployees() {}
+  manageEmployees() {
+    this.askManagerInfo().then(() => {
+      this.employeeMembers().then(() => {
+        this.addTeamMember().then(() => {
+          if (this.memberAdd) {
+            this.employeeMembers();
+          } else if (!this.memberAdd) {
+            this.addManager();
+            if (this.managerAdd) {
+              this.employee();
+            } else {
+              this.quit();
+            }
+          }
+        });
+      });
+    });
+  }
   askManagerInfo() {
     return inquirer
       .prompt([
@@ -56,24 +76,30 @@ class EmployeeInfo {
       });
   }
   employeeMembers() {
-      
-  }
-  addTeamMember() {
-    inquirer
-    .prompt([
-      {
-        name: "teamMember",
-        type: "confirm",
-        message: "Do want to add team member?",
-      },
-    ])
-    .then(({ teamMember }) => {
-      if (teamMember) {
-        this.memberAdd = true;
-      } else {
-        this.memberAdd = false;
+    return this.askMemberType().then(() => {
+      if (this.teamMemberType === "Engineer") {
+        this.askEngineer();
+      } else if (this.teamMemberType === "Intern") {
+        this.askIntern();
       }
     });
+  }
+  addTeamMember() {
+    return inquirer
+      .prompt([
+        {
+          name: "teamMember",
+          type: "confirm",
+          message: "Do want to add team member?",
+        },
+      ])
+      .then(({ teamMember }) => {
+        if (teamMember) {
+          this.memberAdd = true;
+        } else {
+          this.memberAdd = false;
+        }
+      });
   }
   askMemberType() {
     return inquirer
@@ -179,9 +205,13 @@ class EmployeeInfo {
       });
   }
   quit() {
-      process.exit(0);
+    process.exit(0);
   }
 }
+const employeeInfo = new EmployeeInfo();
+employeeInfo.employee();
+const employees = employeeInfo.getEmployees();
+console.log(employees);
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
