@@ -16,6 +16,8 @@ class EmployeeInfo {
   }
   employee() {
     this.teamMemberType = "";
+    this.managerAdd = false;
+    this.memberAdd = false;
     this.manageEmployees();
   }
   manageEmployees() {}
@@ -53,8 +55,26 @@ class EmployeeInfo {
         this.employees.push(manager);
       });
   }
-  employeeMembers() {}
-  addTeamMember() {}
+  employeeMembers() {
+      
+  }
+  addTeamMember() {
+    inquirer
+    .prompt([
+      {
+        name: "teamMember",
+        type: "confirm",
+        message: "Do want to add team member?",
+      },
+    ])
+    .then(({ teamMember }) => {
+      if (teamMember) {
+        this.memberAdd = true;
+      } else {
+        this.memberAdd = false;
+      }
+    });
+  }
   askMemberType() {
     return inquirer
       .prompt([
@@ -73,10 +93,94 @@ class EmployeeInfo {
         }
       });
   }
-  askEngineer() {}
-  askIntern() {}
-  addManager() {}
-  quit() {}
+  askEngineer() {
+    inquirer
+      .prompt([
+        {
+          name: "engineerName",
+          type: "input",
+          message: "Enter engineer name:",
+        },
+        {
+          name: "engineerId",
+          type: "input",
+          message: "Enter engineer id:",
+        },
+        {
+          name: "engineerEmail",
+          type: "input",
+          message: "Enter engineer email:",
+        },
+        {
+          name: "engineerGithub",
+          type: "input",
+          message: "Enter engineer github:",
+        },
+      ])
+      .then(({ engineerName, engineerId, engineerEmail, engineerGithub }) => {
+        const engineer = new Engineer(
+          engineerName,
+          engineerId,
+          engineerEmail,
+          engineerGithub
+        );
+        this.employees.push(engineer);
+      });
+  }
+  askIntern() {
+    inquirer
+      .prompt([
+        {
+          name: "internName",
+          type: "input",
+          message: "Enter intern name:",
+        },
+        {
+          name: "internId",
+          type: "input",
+          message: "Enter intern id:",
+        },
+        {
+          name: "internEmail",
+          type: "input",
+          message: "Enter intern email:",
+        },
+        {
+          name: "internSchool",
+          type: "input",
+          message: "Enter intern school:",
+        },
+      ])
+      .then(({ internName, internId, internEmail, internSchool }) => {
+        const intern = new Intern(
+          internName,
+          internId,
+          internEmail,
+          internSchool
+        );
+        this.employees.push(intern);
+      });
+  }
+  addManager() {
+    inquirer
+      .prompt([
+        {
+          name: "manager",
+          type: "confirm",
+          message: "Do want to add Manager?",
+        },
+      ])
+      .then(({ manager }) => {
+        if (manager) {
+          this.managerAdd = true;
+        } else {
+          this.managerAdd = false;
+        }
+      });
+  }
+  quit() {
+      process.exit(0);
+  }
 }
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
