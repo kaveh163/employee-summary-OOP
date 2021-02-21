@@ -10,7 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-let employees = [];
+
 class EmployeeInfo {
   constructor() {
     this.employees = [];
@@ -27,24 +27,6 @@ class EmployeeInfo {
   manageEmployees() {
     this.askManagerInfo().then(() => {
       this.employeeMembers();
-      //   this.employeeMembers().then(() => {
-      // this.addTeamMember().then(() => {
-      //   if (this.memberAdd) {
-      //     console.log("Here", this.employeeMembers());
-
-      //     this.employeeMembers().then(() => {
-      //       console.log("Member added");
-      //     });
-      //   } else if (!this.memberAdd) {
-      //     this.addManager();
-      //     if (this.managerAdd) {
-      //       this.employee();
-      //     } else {
-      //       this.quit();
-      //     }
-      //   }
-      // });
-      //   });
     });
   }
   askManagerInfo() {
@@ -239,20 +221,17 @@ class EmployeeInfo {
       });
   }
   quit() {
-    employees =  this.getEmployees();
+    console.log(this.employees);
     process.exit();
-    // this.getEmployees();
+    
   }
 }
+
+
 const employeeInfo = new EmployeeInfo();
 employeeInfo.employee();
-console.log(employees);
-// console.log(employeeInfo.employee());
-// console.log(employees);
-// let employees = employeeInfo.getEmployees();
-// if (employees != []) {
-//   console.log(employees);
-// }
+
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
